@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.App.gui;
+package com.sacco.gui;
 
 import com.sacco.classes.Utility;
 import com.sacco.classes.Member;
+import com.sacco.classes.Position;
 import com.sacco.classes.Session;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -19,6 +20,7 @@ public class MembersIndex extends javax.swing.JFrame {
 
     Member _member = new Member();
     static Session _sess = new Session();
+    Position _pos = new Position();
 
     /**
      * Creates new form MembersHomePage
@@ -30,7 +32,7 @@ public class MembersIndex extends javax.swing.JFrame {
             jMenuAdministrator.setVisible(false);
             jMenuSec.setVisible(false);
             jMenuTreasuere.setVisible(false);
-            int m_pos = _member.checkUserPosition();
+            int m_pos = _pos.checkUserPosition();
 
             // check if a user is an admin
             if (m_pos == 1) {

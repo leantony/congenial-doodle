@@ -1,2 +1,6 @@
 /dist/
 /build/
+.class
+.idea/
+nbproject
+manifest.mf

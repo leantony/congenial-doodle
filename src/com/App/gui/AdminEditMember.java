@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.App.gui;
+package com.sacco.gui;
 
 import com.sacco.classes.Admin;
 import static com.sacco.classes.Utility.Validation.*;
-import com.sacco.classes.Utility;
 import com.sacco.classes.Member;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -629,13 +628,7 @@ public class AdminEditMember extends javax.swing.JInternalFrame {
             jTextFieldMobileNo.requestFocus();
             return;
         }
-        if (_member.checkMobileExists(mobileno)) {
-            JOptionPane.showMessageDialog(rootPane, "change that phone number beacuse it's already in use", "Invalid phone number", JOptionPane.WARNING_MESSAGE);
-            jTextFieldMobileNo.requestFocus();
-            return;
-        } else {
-            _member.setMobileno(mobileno);
-        }
+        _member.setMobileno(mobileno);
 
         // the address
         if (ValidateEmptyValue(jTextFieldAddress, "please enter a value for Address")) {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.App.gui;
+package com.sacco.gui;
 
 import com.sacco.classes.Admin;
 import com.sacco.classes.Utility;
@@ -490,7 +490,7 @@ public class AddMember extends javax.swing.JFrame {
             return;
         }
         if (_member.checkMobileExists(mobileno)) {
-            JOptionPane.showMessageDialog(rootPane, "Your mobile number is invalid. A user already has it", "Invalid phone number", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "That mobile number is invalid. A user already has it", "Invalid phone number", JOptionPane.ERROR_MESSAGE);
             jTextFieldMobileNo.requestFocus();
             return;
         } else {

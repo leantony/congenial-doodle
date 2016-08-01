@@ -1,6 +1,7 @@
 package com.sacco.classes;
 
 import com.sacco.Hashing.BCrypt;
+import java.beans.PropertyChangeSupport;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,6 +16,13 @@ import javax.security.auth.login.AccountException;
 public class Member implements AutoCloseable {
 
     protected static long id;
+    public static final String PROP_FIRSTNAME = "PROP_FIRSTNAME";
+    public static final String PROP_GENDER = "PROP_GENDER";
+    public static final String PROP_LASTNAME = "PROP_LASTNAME";
+    public static final String PROP_DOB = "PROP_DOB";
+    public static final String PROP_MOBILENO = "PROP_MOBILENO";
+    public static final String PROP_ADDRESS = "PROP_ADDRESS";
+    public static final String PROP_EMAIL = "PROP_EMAIL";
     private String firstname;
     private String gender;
     private String lastname;
@@ -58,12 +66,16 @@ public class Member implements AutoCloseable {
         id = userid;
     }
 
+    private final transient PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+
     public String getFirstname() {
         return firstname;
     }
 
     public void setFirstname(String firstname) {
+        java.lang.String oldFirstname = this.firstname;
         this.firstname = firstname;
+        propertyChangeSupport.firePropertyChange(PROP_FIRSTNAME, oldFirstname, firstname);
     }
 
     public String getGender() {
@@ -71,7 +83,9 @@ public class Member implements AutoCloseable {
     }
 
     public void setGender(String gender) {
+        java.lang.String oldGender = this.gender;
         this.gender = gender;
+        propertyChangeSupport.firePropertyChange(PROP_GENDER, oldGender, gender);
     }
 
     public String getLastname() {
@@ -79,7 +93,9 @@ public class Member implements AutoCloseable {
     }
 
     public void setLastname(String lastname) {
+        java.lang.String oldLastname = this.lastname;
         this.lastname = lastname;
+        propertyChangeSupport.firePropertyChange(PROP_LASTNAME, oldLastname, lastname);
     }
 
     public Date getDob() {
@@ -87,7 +103,9 @@ public class Member implements AutoCloseable {
     }
 
     public void setDob(Date dob) {
+        java.sql.Date oldDob = this.dob;
         this.dob = dob;
+        propertyChangeSupport.firePropertyChange(PROP_DOB, oldDob, dob);
     }
 
     public long getMobileno() {
@@ -95,7 +113,9 @@ public class Member implements AutoCloseable {
     }
 
     public void setMobileno(long mobileno) {
+        long oldMobileno = this.mobileno;
         this.mobileno = mobileno;
+        propertyChangeSupport.firePropertyChange(PROP_MOBILENO, oldMobileno, mobileno);
     }
 
     public String getAddress() {
@@ -103,7 +123,9 @@ public class Member implements AutoCloseable {
     }
 
     public void setAddress(String address) {
+        java.lang.String oldAddress = this.address;
         this.address = address;
+        propertyChangeSupport.firePropertyChange(PROP_ADDRESS, oldAddress, address);
     }
 
     public String getEmail() {
@@ -111,7 +133,9 @@ public class Member implements AutoCloseable {
     }
 
     public void setEmail(String email) {
+        java.lang.String oldEmail = this.email;
         this.email = email;
+        propertyChangeSupport.firePropertyChange(PROP_EMAIL, oldEmail, email);
     }
 
     public String getPassword() {
@@ -289,42 +313,18 @@ public class Member implements AutoCloseable {
                     + "`firstname`=?, `lastname`=?, `gender`=?, `dob`=?, "
                     + "`mobileno`=?, `address`=?, `email`=? WHERE  `id`=?";
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, m.firstname);
-            stmt.setString(2, m.lastname);
-            stmt.setString(3, m.gender);
-            stmt.setDate(4, m.dob);
-            stmt.setLong(5, m.mobileno);
-            stmt.setString(6, m.address);
-            stmt.setString(7, m.email);
+            stmt.setString(1, m.getFirstname());
+            stmt.setString(2, m.getLastname());
+            stmt.setString(3, m.getGender());
+            stmt.setDate(4, m.getDob());
+            stmt.setLong(5, m.getMobileno());
+            stmt.setString(6, m.getAddress());
+            stmt.setString(7, m.getEmail());
             stmt.setLong(8, Member.getId());
             return stmt.executeUpdate() == 1;
         } finally {
             close();
         }
-    }
-
-    public int checkUserPosition() throws SQLException {
-        this.conn = new Database().getConnection();
-        try {
-            String sql = "SELECT id FROM positions JOIN members_positions ON positions.id = members_positions.position_id AND member_id = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setLong(1, Member.getId());
-            result = stmt.executeQuery();
-            while (result.next()) {
-                if (result.getInt("id") == Admin.ADMIN_POSITION_ID) {
-                    setAdmin(true);
-                    return 1;
-                }
-                if (result.getInt("id") == Secretary.SEC_POSITION_ID) {
-                    return 2;
-                } else {
-                    return result.getInt("id");
-                }
-            }
-        } finally {
-            close();
-        }
-        return -1;
     }
 
     @Override
@@ -349,5 +349,4 @@ public class Member implements AutoCloseable {
             }
         }
     }
-
 }
